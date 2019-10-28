@@ -2,6 +2,8 @@ package com.bisevac.enver.azure.graph;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,8 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthService implements APIConfiguration {
 
+    @Autowired
+    private AzureProperties azureProperties;
 
-    public static String getToken() {
+    public String getToken() {
         log.info("get restTemplate");
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setInterceptors(Collections.singletonList(new RequestResponseLoggingInterceptor()));
@@ -33,9 +37,9 @@ public class AuthService implements APIConfiguration {
         //
         // create a map for post parameters
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("client_id", "client_id");
+        map.add("client_id", azureProperties.getClientId());
         map.add("scope", GRAPH_DEFAULT_SCOPE);
-        map.add("client_secret", "client_secret");
+        map.add("client_secret", azureProperties.getSecretKey());
         map.add("grant_type", "client_credentials");
 
         log.info("set Accept header");
@@ -43,7 +47,7 @@ public class AuthService implements APIConfiguration {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
         log.info("set Url");
-        String url = String.format(GRAPH_API_LOGIN_URL, "tenant_id");
+        String url = String.format(GRAPH_API_LOGIN_URL, azureProperties.getTenantId());
         log.info("URL " + url);
         log.info("Headers" + entity.getBody().toString());
         ResponseEntity<AuthResponseDTO> response = restTemplate.postForEntity(url, entity, AuthResponseDTO.class);

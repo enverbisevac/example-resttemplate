@@ -2,7 +2,9 @@ package com.bisevac.enver.azure.graph;
 
 import java.io.IOException;
 
+import org.apache.http.protocol.HTTP;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
@@ -21,6 +23,7 @@ public class InjectTokenInterceptor implements ClientHttpRequestInterceptor {
     public ClientHttpResponse intercept(HttpRequest request, byte[] body,
             ClientHttpRequestExecution execution) throws IOException {
         request.getHeaders().add(tokenField, tokenValue);
+        request.getHeaders().add(HTTP.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
         ClientHttpResponse response = execution.execute(request, body);
         return response;
     }

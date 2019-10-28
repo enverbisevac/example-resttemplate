@@ -20,8 +20,11 @@ public class DefaultRestTemplate {
     @Autowired
     private HttpComponentsClientHttpRequestFactory factory;
 
+    @Autowired
+    private AuthService authService;
+
     @Bean
-    public RestTemplate restTemplate() {
+    public RestTemplate getRestTemplate() {
         log.info("restTemplate bean");
         RestTemplate restTemplate = new RestTemplate();
 
@@ -36,7 +39,7 @@ public class DefaultRestTemplate {
             interceptors = new ArrayList<>();
         }
         interceptors.add(new RequestResponseLoggingInterceptor());
-        interceptors.add(new InjectTokenInterceptor("Authorization", AuthService.getToken()));
+        interceptors.add(new InjectTokenInterceptor("Authorization", authService.getToken()));
         restTemplate.setInterceptors(interceptors);
 
         return restTemplate;
