@@ -22,7 +22,7 @@ public class DemoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// String token = AuthService.getToken();
+		restTemplate.getForEntity("https://graph.microsoft.com/v1.0/users", ResponseDTO.class);
 		restTemplate.getForEntity("https://graph.microsoft.com/v1.0/users", ResponseDTO.class);
 	}
 

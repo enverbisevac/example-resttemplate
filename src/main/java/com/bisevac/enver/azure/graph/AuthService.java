@@ -37,8 +37,10 @@ public class AuthService implements APIConfiguration {
         //
         // create a map for post parameters
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        log.info("client_id " + azureProperties.getClientId());
         map.add("client_id", azureProperties.getClientId());
         map.add("scope", GRAPH_DEFAULT_SCOPE);
+        log.info("client_secret", azureProperties.getSecretKey());
         map.add("client_secret", azureProperties.getSecretKey());
         map.add("grant_type", "client_credentials");
 
@@ -47,6 +49,7 @@ public class AuthService implements APIConfiguration {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
         log.info("set Url");
+        log.info("Tenant " + azureProperties.getTenantId());
         String url = String.format(GRAPH_API_LOGIN_URL, azureProperties.getTenantId());
         log.info("URL " + url);
         log.info("Headers" + entity.getBody().toString());
